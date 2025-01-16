@@ -1,0 +1,21 @@
+.div {
+  padding: 15px;
+  font-family: Arial, sans-serif;
+  color: #333;
+  border-radius: 10px; /* Changed to 10px for rounded corners */
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+  margin-left: 10px; /* Added space between div and other elements */
+}
+
+.h1 {
+  color: purple;
+  padding: 5px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.p {
+  color: green;
+  padding: 5px;
+  font-family: "Times New Roman", Times, serif;
+}
