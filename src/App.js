@@ -16,6 +16,11 @@ function App() {
         <Route path="/students" element={<StudentComponent />} />
         {/* to add new student*/}
         <Route path="/add-student" element={<AddStudentComponent />} />
+        {/* to edit an student*/}
+        <Route
+          path="/edit-student/:studentUuid"
+          element={<AddStudentComponent />}
+        />
       </Routes>
       <FooterComponent />
     </BrowserRouter>

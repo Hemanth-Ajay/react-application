@@ -9,6 +9,17 @@ class StudentService {
   addStudent(student) {
     return axios.post(STUDENT_API_BASE_URL + "/saveStudent", student);
   }
+
+  updateStudent(student, studentuuid) {
+    return axios.put(
+      STUDENT_API_BASE_URL + "/updateStudent/" + studentuuid,
+      student
+    );
+  }
+
+  deleteStudent(studentUuid) {
+    return axios.delete(STUDENT_API_BASE_URL + "/deleteStudent/" + studentUuid);
+  }
 }
 
 export default new StudentService();

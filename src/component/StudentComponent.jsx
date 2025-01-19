@@ -2,19 +2,54 @@ import React, { useEffect, useState } from "react";
 import StudentService from "../service/StudentService";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import DeleteConfirmationModal from "../common-functions/DeleteConfirmationModal";
 
 const StudentComponent = () => {
   const [students, setStudents] = useState([]);
   const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false);
+  const [studentUuidToDelete, setStudentUuidToDelete] = useState(null);
 
+  const fetchStudents = () => {
+    StudentService.getStudents()
+      .then((response) => {
+        setStudents(response.data); // Assuming the API returns the student list as `data`
+      })
+      .catch((error) => {
+        console.error("Error fetching student data:", error);
+      });
+  };
   useEffect(() => {
-    StudentService.getStudents().then((response) => {
-      setStudents(response.data);
-    });
+    fetchStudents();
   }, []);
 
   const navigateToAddStudent = () => {
     navigate("/add-student");
+  };
+
+  const handleEdit = (student) => {
+    // Navigate to the edit student page with the student data
+    navigate(`/edit-student/${student.studentuuid}`, {
+      state: { studentData: student },
+    });
+  };
+
+  const handleDelete = (studentuuid) => {
+    // Confirm deletion and call the delete handler
+    StudentService.deleteStudent(studentuuid).then(() => {
+      // Fetch the updated list of students
+      fetchStudents();
+      setShowModal(false); // Close the modal
+    });
+  };
+  const handleShowModal = (studentUuid) => {
+    setStudentUuidToDelete(studentUuid);
+    setShowModal(true); // Show the confirmation modal
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false); // Close the confirmation modal
+    setStudentUuidToDelete(null); // Reset the student UUID
   };
 
   return (
@@ -27,6 +62,7 @@ const StudentComponent = () => {
             <th>DOB</th>
             <th>Student Street Name</th>
             <th>Student State</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -36,6 +72,21 @@ const StudentComponent = () => {
               <td>{student.dob}</td>
               <td>{student.addressDto.streetName}</td>
               <td>{student.addressDto.state}</td>
+              <td>
+                {/* Edit and Delete buttons */}
+                <button
+                  className="btn btn-primary btn-sm me-2"
+                  onClick={() => handleEdit(student)}
+                >
+                  Edit
+                </button>
+                <button
+                  className="btn btn-danger btn-sm"
+                  onClick={() => handleShowModal(student.studentuuid)}
+                >
+                  Delete
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -49,6 +100,12 @@ const StudentComponent = () => {
           Add Student
         </button>
       </div>
+      <DeleteConfirmationModal
+        show={showModal}
+        onClose={handleCloseModal}
+        onDelete={handleDelete}
+        studentUuid={studentUuidToDelete}
+      />
     </div>
   );
 };

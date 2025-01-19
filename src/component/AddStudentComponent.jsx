@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import studentSerivce from "../service/StudentService";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useParams, useNavigate } from "react-router-dom";
 
 const AddStudentComponent = () => {
   const [studentData, setStudentData] = useState({
@@ -11,7 +11,19 @@ const AddStudentComponent = () => {
       state: "",
     },
   });
+  const { studentUuid } = useParams();
+  const location = useLocation();
   const navigate = useNavigate();
+  // If state is available (for editing), set the student data from the passed props
+  useEffect(() => {
+    if (location.state && location.state.studentData) {
+      //console.log(location.state.studentData);
+      setStudentData(location.state.studentData);
+    } else if (studentUuid) {
+      // Fetch the student if it is not passed via state
+      console.log("fetching student");
+    }
+  }, [studentUuid, location.state]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,18 +45,44 @@ const AddStudentComponent = () => {
       }));
     }
   };
+  // Convert from yyyy-MM-dd to dd-MM-yyyy
+  const convertToDDMMYYYY = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // months are 0-indexed
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // Here you would typically send the data to the server
-    studentSerivce.addStudent(studentData).then((response) => {
-      navigate("/students");
-    });
+    if (studentUuid) {
+      // Call the update student service
+      studentSerivce
+        .updateStudent(studentData, studentUuid)
+        .then((response) => {
+          navigate("/students");
+        });
+      //console.log("updating student");
+    } else {
+      const formattedDob = convertToDDMMYYYY(studentData.dob);
+      const formData = {
+        ...studentData,
+        dob: formattedDob,
+      };
+      // Call the add student service
+      studentSerivce.addStudent(formData).then((response) => {
+        navigate("/students");
+      });
+    }
   };
 
   return (
     <div className="container mt-3">
-      <h2 className="mb-2">Add New Student</h2>
+      <h2 className="mb-2">
+        {studentUuid ? "Edit Student" : "Add New Student"}
+      </h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="firstName">First Name</label>
@@ -108,7 +146,7 @@ const AddStudentComponent = () => {
           className="btn btn-success"
           style={{ marginTop: 10, marginBottom: 10 }}
         >
-          Add Student
+          {studentUuid ? "Update Student" : "Add Student"}
         </button>
       </form>
     </div>
