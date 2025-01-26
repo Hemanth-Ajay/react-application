@@ -77,6 +77,10 @@ const AddStudentComponent = () => {
       });
     }
   };
+  // Navigate back to the previous page without submitting the form
+  const handleCancel = () => {
+    navigate(-1);
+  };
 
   return (
     <div className="container mt-3">
@@ -147,6 +151,14 @@ const AddStudentComponent = () => {
           style={{ marginTop: 10, marginBottom: 10 }}
         >
           {studentUuid ? "Update Student" : "Add Student"}
+        </button>
+        <button
+          type="cancel"
+          className="btn btn-outline-dark"
+          style={{ marginTop: 10, marginBottom: 10, marginLeft: 10 }}
+          onClick={handleCancel}
+        >
+          {studentUuid ? "Cancel" : "Back to Students"}
         </button>
       </form>
     </div>
