@@ -4,6 +4,7 @@ import FooterComponent from "./component/FooterComponent";
 import HeaderComponent from "./component/HeaderComponent";
 import StudentComponent from "./component/StudentComponent";
 import AddStudentComponent from "./component/AddStudentComponent";
+import AddStudentComponentUsingFormik from "./component/AddStudentComponentUsingFormik";
 function App() {
   return (
     <BrowserRouter>
@@ -20,6 +21,11 @@ function App() {
         <Route
           path="/edit-student/:studentUuid"
           element={<AddStudentComponent />}
+        />
+        {/* to add new student using formik */}
+        <Route
+          path="/add-student-formik"
+          element={<AddStudentComponentUsingFormik />}
         />
       </Routes>
       <FooterComponent />

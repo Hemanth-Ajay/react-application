@@ -26,6 +26,9 @@ const StudentComponent = () => {
   const navigateToAddStudent = () => {
     navigate("/add-student");
   };
+  const navigateToAddStudentFormik = () => {
+    navigate("/add-student-formik");
+  };
 
   const handleEdit = (student) => {
     // Navigate to the edit student page with the student data
@@ -98,6 +101,13 @@ const StudentComponent = () => {
           onClick={navigateToAddStudent}
         >
           Add Student
+        </button>
+        <button
+          className="btn btn-primary"
+          style={{ marginTop: 10, marginBottom: 10, marginLeft: 10 }}
+          onClick={navigateToAddStudentFormik}
+        >
+          Add Student Advanced
         </button>
       </div>
       <DeleteConfirmationModal
